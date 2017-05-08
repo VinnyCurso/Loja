@@ -5,7 +5,7 @@
  */
 package Loja;
 
-import View.Principal;
+import view.Principal;
 
 /**
  *
