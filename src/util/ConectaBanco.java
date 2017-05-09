@@ -45,10 +45,24 @@ public class ConectaBanco {
         }
     }
     
+    public void executaSQL(String sql){
+     
+        try {
+            
+            stat = conection.createStatement(resul.TYPE_SCROLL_INSENSITIVE,resul.CONCUR_READ_ONLY);
+            resul = stat.executeQuery(sql);
+            
+        } catch (SQLException e) {
+              JOptionPane.showMessageDialog(null, "" + e.getMessage());
+        }
+        
+    }
     public void dseconecta(){
         
         try {
             conection.close();
+            
+            JOptionPane.showMessageDialog(null, "Desconectado  com sucesso! ");
             
         } catch (SQLException ex) {
             
