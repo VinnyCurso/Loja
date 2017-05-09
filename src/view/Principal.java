@@ -5,17 +5,22 @@
  */
 package view;
 
+import util.ConectaBanco;
+
 /**
  *
  * @author vinicius caetano
  */
 public class Principal extends javax.swing.JFrame {
+    
+    ConectaBanco conectar = new ConectaBanco();
 
     /**
      * Creates new form Principal
      */
     public Principal() {
         initComponents();
+        conectar.conexao();
     }
 
     /**
