@@ -7,10 +7,13 @@ package view;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import util.ConectaBanco;
+import util.ModeloTabela;
 
 /**
  *
@@ -23,9 +26,10 @@ public class EstadoView extends javax.swing.JFrame {
     /**
      * Creates new form EstadoView
      */
-    public EstadoView() {
+    public EstadoView() throws SQLException {
         initComponents();
         conecta.conexao();
+        preencherTabela("select * from estado order by id_estado");
     }
 
     /**
@@ -51,6 +55,10 @@ public class EstadoView extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         TabelaEstado = new javax.swing.JTable();
+        btnPrimeiro = new javax.swing.JButton();
+        btnUltimo = new javax.swing.JButton();
+        btnProximo = new javax.swing.JButton();
+        btnAnterior = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -64,10 +72,13 @@ public class EstadoView extends javax.swing.JFrame {
 
         jLabel4.setText("Sigla:");
 
+        txtCodigo.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtCodigo.setEnabled(false);
 
+        txtNome.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtNome.setEnabled(false);
 
+        txtSigla.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtSigla.setEnabled(false);
 
         btnNovo.setText("Novo");
@@ -105,16 +116,44 @@ public class EstadoView extends javax.swing.JFrame {
 
         TabelaEstado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane2.setViewportView(TabelaEstado);
+
+        btnPrimeiro.setText("Primeiro");
+        btnPrimeiro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrimeiroActionPerformed(evt);
+            }
+        });
+
+        btnUltimo.setText("Ultimo");
+        btnUltimo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUltimoActionPerformed(evt);
+            }
+        });
+
+        btnProximo.setText("Proximo");
+        btnProximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProximoActionPerformed(evt);
+            }
+        });
+
+        btnAnterior.setText("Anterior");
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -138,15 +177,30 @@ public class EstadoView extends javax.swing.JFrame {
                             .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnPrimeiro, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnUltimo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnAnterior)))
                         .addGap(20, 20, 20)
-                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(61, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
@@ -173,9 +227,15 @@ public class EstadoView extends javax.swing.JFrame {
                     .addComponent(btnAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGap(33, 33, 33)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPrimeiro, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUltimo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAnterior))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addGap(78, 78, 78))
         );
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -202,7 +262,7 @@ public class EstadoView extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(624, 607));
@@ -267,6 +327,126 @@ public class EstadoView extends javax.swing.JFrame {
         btnNovo.setEnabled(false);
     }//GEN-LAST:event_btnNovoActionPerformed
 
+    private void btnPrimeiroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrimeiroActionPerformed
+        // TODO add your handling code here:
+        
+        btnAlterar.setEnabled(true);
+        btnExcluir.setEnabled(true);
+        
+        try {
+            
+                   conecta.executaSQL("select * from estado");
+                    conecta.resul.first(); // primeiro registro do banco de dados
+                    
+                    txtCodigo.setText(String.valueOf(conecta.resul.getInt("id_estado")));
+                    txtNome.setText(conecta.resul.getString("nome_estado"));
+                    txtSigla.setText(conecta.resul.getString("sigla_estado"));
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, " Erro ao mostrar dados!  " +e);
+        }
+    }//GEN-LAST:event_btnPrimeiroActionPerformed
+
+    private void btnUltimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUltimoActionPerformed
+        // TODO add your handling code here:
+        
+           btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
+        
+                try {
+            
+                   conecta.executaSQL("select * from estado");
+                    conecta.resul.last(); // ultimo registro do banco de dados
+                    
+                    txtCodigo.setText(String.valueOf(conecta.resul.getInt("id_estado")));
+                    txtNome.setText(conecta.resul.getString("nome_estado"));
+                    txtSigla.setText(conecta.resul.getString("sigla_estado"));
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, " Erro ao mostrar dados!  " +e);
+        }
+    }//GEN-LAST:event_btnUltimoActionPerformed
+
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        // TODO add your handling code here:
+           btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
+        
+        try {
+            
+            conecta.resul.previous();
+            
+                    txtCodigo.setText(String.valueOf(conecta.resul.getInt("id_estado")));
+                    txtNome.setText(conecta.resul.getString("nome_estado"));
+                    txtSigla.setText(conecta.resul.getString("sigla_estado"));
+            
+        } catch (SQLException e) {
+              JOptionPane.showMessageDialog(null, " Erro ao mostrar dados!  " +e);
+        }
+    }//GEN-LAST:event_btnAnteriorActionPerformed
+
+    private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
+        // TODO add your handling code here:
+        
+           btnAlterar.setEnabled(true);
+            btnExcluir.setEnabled(true);
+        
+          try {
+            
+            conecta.resul.next();
+            
+                    txtCodigo.setText(String.valueOf(conecta.resul.getInt("id_estado")));
+                    txtNome.setText(conecta.resul.getString("nome_estado"));
+                    txtSigla.setText(conecta.resul.getString("sigla_estado"));
+            
+        } catch (SQLException e) {
+              JOptionPane.showMessageDialog(null, " Erro ao mostrar dados!  " +e);
+        }
+          
+      
+    }//GEN-LAST:event_btnProximoActionPerformed
+
+    public void preencherTabela(String SQL) throws SQLException {
+
+        ArrayList dados = new ArrayList();
+
+        String[] Colunas = new String[]{"ID", "Nome", "Sigla"};
+
+        conecta.executaSQL(SQL);
+
+        try {
+
+            conecta.resul.first();
+
+            do {
+                dados.add(new Object[]{conecta.resul.getInt("id_estado"), conecta.resul.getString("nome_estado"), conecta.resul.getString("sigla_estado")});
+            } while (conecta.resul.next());
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao preencher Tabela" + e);
+        }
+        
+        ModeloTabela modelo = new ModeloTabela(dados, Colunas);
+        
+        TabelaEstado.setModel(modelo);
+        
+        TabelaEstado.getColumnModel().getColumn(0).setPreferredWidth(80);
+        TabelaEstado.getColumnModel().getColumn(0).setResizable(false);
+        
+        TabelaEstado.getColumnModel().getColumn(1).setPreferredWidth(180);
+        TabelaEstado.getColumnModel().getColumn(1).setResizable(false);
+        
+        TabelaEstado.getColumnModel().getColumn(2).setPreferredWidth(80);
+        TabelaEstado.getColumnModel().getColumn(2).setResizable(false);
+        
+        TabelaEstado.getTableHeader().setReorderingAllowed(false);
+        TabelaEstado.setAutoResizeMode(TabelaEstado.AUTO_RESIZE_OFF);
+        
+        TabelaEstado.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+    }
+
+
     /**
      * @param args the command line arguments
      */
@@ -297,7 +477,11 @@ public class EstadoView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EstadoView().setVisible(true);
+                try {
+                    new EstadoView().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(EstadoView.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -305,10 +489,14 @@ public class EstadoView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable TabelaEstado;
     private javax.swing.JButton btnAlterar;
+    private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnNovo;
+    private javax.swing.JButton btnPrimeiro;
+    private javax.swing.JButton btnProximo;
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnUltimo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
